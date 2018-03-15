@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack-dev-server --color",
+    "start": "webpack-dev-server --progress --inline --color",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,9 +19,13 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.10",
     "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.0.6",
     "node-sass": "^4.7.2",
+    "react-hot-loader": "^4.0.0",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "url-loader": "^1.0.1",

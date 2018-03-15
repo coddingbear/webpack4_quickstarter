@@ -1,4 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 const MODE = 'development'; 
 // 소스 맵의 이용 여부(production의 때는 소스 맵을 이용하지 않는다.)
 const enabledSourceMap=(MODE==='development');
@@ -8,11 +12,15 @@ const config = {
 	// 'development'로 설정하면 소스맵을 효과적으로 JS파일이 출력된다.
 	mode: MODE,
 	// 주를 이루는 JavaScript 파일(엔트리 포인트)
-	entry: './src/main.js',
+	entry: [
+		'webpack-dev-server/client?http://reactboy.run.goorm.io',
+		'webpack/hot/only-dev-server',
+		'./src',	
+	],
 	// 파일 출력 설정
 	output: {
-		path: `${__dirname}/dist`, // 출력 파일 디렉토리 이름
-		filename: 'main.js' // 출력 파일 이름
+		path: path.resolve(__dirname, 'dist'), // 출력 파일 디렉토리 이름
+		filename: '[name].bundle.js' // 출력 파일 이름
 	},
 	module: {
 		rules: [
@@ -27,11 +35,15 @@ const config = {
 								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
 								['env', {'modules' : false}	],
 								// React의 JSX 해석
-								'react'
-							]
+								'react',
+								
+							],
+							cacheDirectory: true,
+							plugins : ['react-hot-loader/babel'],
 						}
 					}
 				],
+				include: path.resolve(__dirname, 'src'),
 				exclude: /node_modules/,
 			},
 			{  // css 파일 번들 규칙
@@ -88,21 +100,37 @@ const config = {
 			},
 		],
 	},
+	devtool: 'inline-source-map',
 	// 로컬 개발용 환경을 만듦
 	// 실행시 브라우저가 자동적으로 localhost를 연다.
 	devServer: {
 		contentBase: path.join(__dirname, 'dist'),
 		compress: true, // gzip 압축 설정
-		host: "0.0.0.0",
+		host: '0.0.0.0',
 		port: 3000,
 		// open: true, // 자동 부라우저 열기
+		//https: true,
+		//historyApiFallback: true,
 		// disableHostCheck: true, // 호스트 체크 해제
 		allowedHosts: [ // 접속하는 호스트 이름
 			'.run.gooorm.io',
 			'reactboy.run.goorm.io',
 		],
-		// hot: true
-	}
+		headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+		hot: true // 핫 모듈 사용
+	},
+	plugins : [
+		new CleanWebpackPlugin(['dist']),
+		new HtmlWebpackPlugin({
+			title: 'Hot Module Replacement',
+			template: './src/index.html',
+			filename: 'index.html',
+		}),
+		new webpack.NamedModulesPlugin(),
+		new webpack.HotModuleReplacementPlugin()
+	],
 };
 
 module.exports = config;

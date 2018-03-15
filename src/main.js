@@ -15,4 +15,14 @@ class App extends React.Component {
 	}
 }
 
-ReactDOM.render(<App/>, document.getElementById('app'));
+const element  = document.getElementById('app');
+
+ReactDOM.render(<App/>, element);
+
+// Hot Module Replacement 사용
+if(module.hot) {
+	module.hot.accept('./main.js',  () => {
+		console.log('Accepting the updated SubComponent module!');
+		ReactDOM.render(<App/>, element);
+	});
+}
