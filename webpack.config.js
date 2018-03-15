@@ -5,11 +5,11 @@ const config = {
 	// 'development'로 설정하면 소스맵을 효과적으로 JS파일이 출력된다.
 	mode: 'development',
 	// 주를 이루는 JavaScript 파일(엔트리 포인트)
-	entry: './src/app.js',
+	entry: './src/main.js',
 	// 파일 출력 설정
 	output: {
 		path: `${__dirname}/dist`, // 출력 파일 디렉토리 이름
-		filename: 'bundle.js' // 출력 파일 이름
+		filename: 'main.js' // 출력 파일 이름
 	},
 	module: {
 		rules: [
@@ -22,7 +22,9 @@ const config = {
 							presets: [
 								// 'env'로 지정하여 ES2017를 ES5로 변환
 								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
-								['env', {'modules' : false}	]
+								['env', {'modules' : false}	],
+								// React의 JSX 해석
+								'react'
 							]
 						}
 					}

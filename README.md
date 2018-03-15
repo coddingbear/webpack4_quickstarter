@@ -137,6 +137,7 @@ webpack.config.js 파일을 생성하여 webpack 사용시 환경 설정을 미�
   ```
 ---
 ## Babel로 ES2017 환경 만들기
+![React + Babel + Webpack](http://blogs.quovantis.com/wp-content/uploads/2017/01/React-JS-ES6-Setup-01.png)
 
 ### 1. Webpack + Babel 구성
 
@@ -240,9 +241,85 @@ webpack.config.js 파일을 생성하여 webpack 사용시 환경 설정을 미�
 	
 ### 3. webpack + Babel + React 구성 하기
 
+1. react 설치하기
+
 ```
 npm i -D webpack webpack-cli 
 npm i -D babel-core babel-loader babel-preset-env babel-preset-react
 
 npm i -S react react-dom
-```
+ ```
+
+ ```
+ /* package.json 파일 */
+  {
+	  "scripts":{
+		"build":"webpack"
+	  },
+	  "devDependencies":{
+		"babel-core":"^6.26.0",
+		"babel-loader":"^7.1.3",
+		"babel-preset-env":"^1.6.1",
+		"babel-preset-react":"^6.24.1",
+		"webpack":"^4.0.0",
+		"webpack-cli":"^2.0.9"
+	  },
+	  "dependencies":{
+		"react":"^16.2.0",
+		"react-dom":"^16.2.0"
+	  },
+	  "private":true
+ }
+
+ ```
+
+2. webpack.config.js 설정하기
+ ```javascript
+	module.exports={
+	  mode:'development',
+	  entry:'./src/main.js',
+	  output:{
+		path: `${__dirname}/dist`,
+		filename:'main.js'
+	  },
+	  module:{
+		rules:[
+		  {
+			test:/\. js$/,
+			use:[
+			  {
+				loader:'babel-loader',
+				options:{
+				  presets:[
+					['env',{'modules':false}],
+					//React의 JSX를 해석 추가
+					'react'
+				  ]
+			    }
+			  }
+			],
+			exclude:/node_modules/,
+		  }
+		]
+	  }
+	};
+ ```
+3. 예제 소스 파일 만들기
+ 
+4. 간단하게 React 빌드 환경 만들기
+위 설정 과정을 거치지 말고 간단하게 React 개발 환경을 만들 수 있다.
+바로 [create-react-app](https://github.com/facebook/create-react-app)를 이용해서 만들 수 있다.
+이 빌드 내부에 webpack, babel, react를 사용하고 있다.
+
+ * 글로벌로 `create-react-app` 설치하기
+ ```
+  $ npm i -g create-react-app
+ ```
+ *  프로젝트 생성하고 실행하기
+    ```
+	  $ create-react-app my_app
+	  $ cd my_app
+	  $ npm start
+    
+    ```
+	![create-react-app](https://camo.githubusercontent.com/29765c4a32f03bd01d44edef1cd674225e3c906b/68747470733a2f2f63646e2e7261776769742e636f6d2f66616365626f6f6b2f6372656174652d72656163742d6170702f323762343261632f73637265656e636173742e737667)
