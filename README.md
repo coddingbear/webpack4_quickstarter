@@ -323,3 +323,83 @@ npm i -S react react-dom
     
     ```
 	![create-react-app](https://camo.githubusercontent.com/29765c4a32f03bd01d44edef1cd674225e3c906b/68747470733a2f2f63646e2e7261776769742e636f6d2f66616365626f6f6b2f6372656174652d72656163742d6170702f323762343261632f73637265656e636173742e737667)
+---
+
+## 스타일 시트 (CSS, SASS) 번들 구성하기
+webpack에서 JavaScript 만 아니라 스타일 시트, 이미지, 웹 폰트 등 모든 자원을 모듈로 취급할 수 있습니다. 이런 JS 파일 이외의 파일을 다루기 위해 webpack에서 [Loader](https://webpack.js.org/loaders/) 기능을 사용합니다.
+
+### 1. Webpack + CSS 구성하기
+
+1. 모듈 설치 하기
+ ```
+	npm i -D webpack webpack-cli  // -> 설치 되었으면 생략
+	
+	npm i -D style-loader css-loader
+ ```
+2. webpack.config.js 설정 파일 
+ ```
+	module.exports={
+		//모드 값을 production으로 설정하면 최적화된 상태에서
+		//development로 설정하면 소스 맵 효과적으로 JS파일이 출력된다
+		mode:'production',
+		/* -- 다른 설정 생략 -- */
+		module:{
+			rules:[
+				{  // css 파일 번들 규칙
+					test:/\. css/,
+						use:[ 
+							'style-loader',
+							{loader:'css-loader', options:{url:false}},
+							// 번들 흐름은 배열의 뒤에서부터 차례로 해석됨
+							// css-loader -> style-loader 
+						],
+				},
+			]
+		}
+	};
+ ```
+3. CSS 를 활용한 예제 파일 생성  style.css
+ ```
+ // src/main.js
+ import './style.css';  // 스타일 파일을 임포트 한다.
+ 
+ ```
+4. webpack을 실행하여 번들된 스타일을 확인한다.
+
+5. 소스맵 활용하기
+ 소스 맵이란 변환 정의 코드 정보를 보관하여 개발시에 활용할 수 있는 기능입니다.
+ 변환 후의  코드는 형태가 크게 변화기 때문에 디버깅시 원래 코드의 몇 줄 번째가 영향을 주는 지 알기 쉽게 하기 위해 소스 맵 설정을 한다.
+ ```
+	const MODE='development';
+	//소스 맵의 이용 여부(production의 때는 소스 맵을 이용하지 않는다)
+	const enabledSourceMap=(MODE==='development');
+
+	module.exports={
+	  //모드 값을 production으로 설정하면 최적화된 상태에서
+	  //development로 설정하면 소스 맵 효과적으로 JS파일이 출력된다
+	  mode:MODE,
+
+	  module:{
+		rules:[
+		  //CSS파일의 읽기
+		  {
+			test: /\.css$/,
+			// 사용하는 로더
+			use:[
+			  //link태그에 출력하는 기능
+			  'style-loader',
+			  //CSS를 번들하기 위한 기능
+			  {
+				loader:'css-loader',
+				options:{				  
+				  url:false, // 옵션에서 CSS내 url()메소드의 혼잡을 금지하는				  
+				  minimize:true, // CSS의 공백 문자를 삭제한다
+				  sourceMap: enabledSourceMap, //소스 맵 사용
+				},
+			  },
+			],
+		  },
+		]
+	  }
+	};
+ ```

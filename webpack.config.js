@@ -1,9 +1,12 @@
 const path = require('path');
+const MODE = 'development'; 
+// 소스 맵의 이용 여부(production의 때는 소스 맵을 이용하지 않는다.)
+const enabledSourceMap=(MODE==='development');
 
 const config = {
 	// 모드 값을 'production'으로 설정하면 최적화된 상태에서
 	// 'development'로 설정하면 소스맵을 효과적으로 JS파일이 출력된다.
-	mode: 'development',
+	mode: MODE,
 	// 주를 이루는 JavaScript 파일(엔트리 포인트)
 	entry: './src/main.js',
 	// 파일 출력 설정
@@ -30,7 +33,23 @@ const config = {
 					}
 				],
 				exclude: /node_modules/,
-			}
+			},
+			{  // css 파일 번들 규칙
+				test:/\.css$/,
+				use:[ 
+					'style-loader', // link 태그에 출력 하는 기능
+					{
+						loader:'css-loader', // CSS를 번들하기 위한 기능
+						options:{
+							url:false, // 옵션에서 CSS내 url()메소드의 혼잡을 금지
+							minimize: true, // css의 공백 문자를 삭제한다.
+							sourceMap: enabledSourceMap,
+						}
+					},
+					// 번들 흐름은 배열의 뒤에서부터 차례로 해석됨
+					// css-loader -> style-loader 
+				],
+			},
 		]
 	},
 	// 로컬 개발용 환경을 만듦
