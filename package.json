@@ -1,0 +1,21 @@
+{
+  "name": "webpack4_quickstarter",
+  "version": "1.0.0",
+  "description": "Webpack 4 입문",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server --color",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webpack4"
+  ],
+  "author": "CodingBear",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
+  }
+}
