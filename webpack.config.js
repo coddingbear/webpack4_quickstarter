@@ -11,6 +11,25 @@ const config = {
 		path: `${__dirname}/dist`, // 출력 파일 디렉토리 이름
 		filename: 'main.js' // 출력 파일 이름
 	},
+	module: {
+		rules: [
+			{   // 확장자가 .js 경우 규칙
+				test: /\.js$/,
+				use: [
+					{	// Babel 로더 이용
+						loader: 'babel-loader',
+						options: { // Babel 옵션 지정
+							presets: [
+								// 'env'로 지정하여 ES2017를 ES5로 변환
+								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
+								['env', {'modules' : false}	]
+							]
+						}
+					}
+				]
+			}
+		]
+	},
 	// 로컬 개발용 환경을 만듦
 	// 실행시 브라우저가 자동적으로 localhost를 연다.
 	devServer: {

@@ -79,7 +79,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _sub__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sub */ \"./src/sub.js\");\n// import 문을 사용하여 sub.js파일을 가져온다.\n\n\n// sub.js에 정의된 Javascript를 실행한다.\nObject(_sub__WEBPACK_IMPORTED_MODULE_0__[\"hello\"])();\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _sub__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sub */ \"./src/sub.js\");\n// import 문을 사용하여 sub.js파일을 가져온다.\n\n\nvar message = 'Hello World';\n\n// sub.js에 정의된 Javascript를 실행한다.\nObject(_sub__WEBPACK_IMPORTED_MODULE_0__[\"hello\"])(message);\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -91,7 +91,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _sub
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"hello\", function() { return hello; });\n// export 문을 사용하여 hello 함수를 정의한다.\nfunction hello() {\n\talert('hello 메서드가 실행됨.');\n}\n\n//# sourceURL=webpack:///./src/sub.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"hello\", function() { return hello; });\n// export 문을 사용하여 hello 함수를 정의한다.\nvar hello = function hello(message) {\n\n\tdocument.getElementById('root').innerHTML = '<h1>' + message + '</h1>';\n\n\tconsole.log(message + '\\uB97C \\uCD9C\\uB825\\uD558\\uC600\\uC2B5\\uB2C8\\uB2E4.');\n};\n\n//# sourceURL=webpack:///./src/sub.js?");
 
 /***/ })
 

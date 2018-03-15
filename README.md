@@ -135,3 +135,61 @@ webpack.config.js 파일을 생성하여 webpack 사용시 환경 설정을 미�
 		}
 	};
   ```
+---
+## Babel로 ES2017 환경 만들기
+
+### 1. Webpack + Babel 구성
+
+1. babel-core, babel-loader babel-preset-env 설치
+ ```
+ $ npm i -D babel-core babel-loader babel-preset-env
+ ```
+2. 설치후 package.json 파일
+ ```
+ {
+	 "scripts": {
+		"build": "webpack",
+		"start": "webpack-dev-server --color"
+	  },
+	  "private": true,
+	  "devDependencies": {
+		"babel-core": "^6.26.0",
+		"babel-loader": "^7.1.4",
+		"babel-preset-env": "^1.6.1",
+		"webpack": "^4.1.1",
+		"webpack-cli": "^2.0.12",
+		"webpack-dev-server": "^3.1.1"
+	  }
+  }
+ ```
+3. webpack.config.js 설정하기
+ ```javascript
+ 	/* -- 설정 내용 --*/
+	module: {
+		rules: [
+			{   // 확장자가 .js 경우 규칙
+				test: /\.js$/,
+				use: [
+					{	// Babel 로더 이용
+						loader: 'babel-loader',
+						options: { // Babel 옵션 지정
+							presets: [
+								// 'env'로 지정하여 ES2017를 ES5로 변환
+								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
+								['env', {'modules' : false}	]
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+ ```
+4. index.js sub.js 예제 파일을 ES2017 문법으로 변경
+
+5. webpack 또는 webpack-dev-server 실행하여 변환 및 테스트 하기
+ ```
+ $ npm run build
+ 
+ $ npm start 
+ ```
