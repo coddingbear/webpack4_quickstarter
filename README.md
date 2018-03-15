@@ -193,3 +193,56 @@ webpack.config.js 파일을 생성하여 webpack 사용시 환경 설정을 미�
  
  $ npm start 
  ```
+### 2. webpack + Babel + jQuery 구성하기
+
+1. npm 으로 jQuery 설치
+ ```
+ $ npm install --save jquery
+ ```
+2. webpack.config.js 설정 추가
+  모듈 변환 규칙에서 'exclude' 설정으로 node_modules 폴더 제외한다.
+ ```
+	const path = require('path');
+	module.exports = {
+		mode: 'production',
+		entry: './src/app.js',
+		output: {
+			path: `${__dirname}/dist`,
+			filename: 'bundle.js'
+		},
+		module: {
+			rules: [
+				{   // 확장자가 .js 경우 규칙
+					test: /\.js$/,
+					use: [
+						{	// Babel 로더 이용
+							loader: 'babel-loader',
+							options: { // Babel 옵션 지정
+								presets: [
+									// 'env'로 지정하여 ES2017를 ES5로 변환
+									//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
+									['env', {'modules' : false}	]
+								]
+							}
+						}
+					],
+					// node_node_modules는 제외한다.
+					exclude: /node_modules/,
+				}
+			]
+		},
+		/* -- 이하 생략 -- */
+	}
+ ```
+4. src/app.js  dist/index_jquery.html 예제 파일 생성.
+5. `npm run build` 또는 `npm start` 하여 index_jquery.html 예제 확인
+	변환된 dist/bundle.js 파일 확인.
+	
+### 3. webpack + Babel + React 구성 하기
+
+```
+npm i -D webpack webpack-cli 
+npm i -D babel-core babel-loader babel-preset-env babel-preset-react
+
+npm i -S react react-dom
+```
