@@ -337,7 +337,7 @@ webpack에서 JavaScript 만 아니라 스타일 시트, 이미지, 웹 폰트 �
 	npm i -D style-loader css-loader
  ```
 2. webpack.config.js 설정 파일 
- ```
+ ```javascript
 	module.exports={
 		//모드 값을 production으로 설정하면 최적화된 상태에서
 		//development로 설정하면 소스 맵 효과적으로 JS파일이 출력된다
@@ -359,7 +359,7 @@ webpack에서 JavaScript 만 아니라 스타일 시트, 이미지, 웹 폰트 �
 	};
  ```
 3. CSS 를 활용한 예제 파일 생성  style.css
- ```
+ ```javascript
  // src/main.js
  import './style.css';  // 스타일 파일을 임포트 한다.
  
@@ -369,7 +369,7 @@ webpack에서 JavaScript 만 아니라 스타일 시트, 이미지, 웹 폰트 �
 5. 소스맵 활용하기
  소스 맵이란 변환 정의 코드 정보를 보관하여 개발시에 활용할 수 있는 기능입니다.
  변환 후의  코드는 형태가 크게 변화기 때문에 디버깅시 원래 코드의 몇 줄 번째가 영향을 주는 지 알기 쉽게 하기 위해 소스 맵 설정을 한다.
- ```
+ ```javascript
 	const MODE='development';
 	//소스 맵의 이용 여부(production의 때는 소스 맵을 이용하지 않는다)
 	const enabledSourceMap=(MODE==='development');
@@ -403,3 +403,92 @@ webpack에서 JavaScript 만 아니라 스타일 시트, 이미지, 웹 폰트 �
 	  }
 	};
  ```
+
+### 2. Webpack + Sass 구성하기 
+
+1. 설치 명령 (위에 설치된 모듈은 생략해도 된다.)
+ ```
+   npm i-D webpack webpack-cli css-loader style-loader node-sass sass-loader
+ ```
+2. webpack.config.js 설정하기
+ ```javascript
+	//'production'이나 'development'을 지정
+	const MODE='development';
+	//소스 맵의 이용 여부(production의 때는 소스 맵을 이용하지 않는다)
+	const enabledSourceMap=(MODE==='development');
+
+	module.exports={
+	  //모드 값을 production으로 설정하면 최적화된 상태에서
+	  //development로 설정하면 소스 맵 효과적으로 JS파일이 출력된다
+	  mode:MODE,
+
+	  module:{
+		rules:[ 
+		  //Sass파일 읽기와 컴파일
+		  {
+			test: /\.scss$/,//대상 파일의 확장자
+			use:[
+			  'style-loader', //link태그에 출력하는 기능
+			  { //CSS를 번들하기 위한 기능
+				loader:'css-loader',
+				options: {
+				  url:true, // 옵션에서 css내 url() 메소드를 넣는다.
+				  sourceMap:enabledSourceMap, //소스 맵의 이용 여부
+				  // 0=>no loaders(default);
+				  // 1=>postcss-loader;
+				  // 2=>postcss-loader, sass-loader
+				  importLoaders:2
+				},
+			  },
+			  {
+				loader:'sass-loader', //Sass -> Css 변환 로더
+				options:{
+				  sourceMap:enabledSourceMap, //소스 맵의 이용 여부
+				}
+			  }
+			],
+		  },
+		  { // 이미지 파일, 웹 폰트 번들
+			test: /.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
+			// 화상을 Base64으로 끌어들인다.
+			loader: 'url-loader'
+		  },
+		],
+	  },
+	};
+ ```
+3. build 명령
+
+ ```
+   npm run build
+   
+   npm start
+ ```
+4. scss 속에 URL 참조하는 이미지파일과 폰트 파일을 url-loader 번들할 수 있도록 하려면 로더를 설치하고 위 webpack.config.js에 설정을 추가한다.
+ ```
+ npm i -D url-loader file-loader
+ ```
+5. 이미지 파일을 일괄적으로 url-loader로 번들하여 포함하지 않고 file-loader로 사용하여 외부 참조를 할 수 있다.
+
+  > JavaScript에서 이미지를 번들하면 
+   1. JS 파일 평가 시간이 증대
+   2. 본래 파일 보다 용량이 Base64화 함으로써 1.33배 증대된다.
+   3. 단 서버요청 처리 비용에 비해 (i), (ii) 는 작을 경우도 있음
+  해결 방법으로 url-loader를 limit를 설정한다.
+  
+  ```javascript
+    // webpack.config.js 이미지 번들 설정 수정
+  	{ // 이미지 파일, 웹 폰트 번들
+		test: /.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
+		// 화상을 Base64으로 끌어들인다.
+		use: [
+			{
+				loader: 'url-loader',
+				options: {
+					limit: 100 * 1023,  // 100KB 이하의 이미지 파일로 한정
+					name: './img/[name].[ext]'
+				}
+			}
+		],
+	},
+  ```

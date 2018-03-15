@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './style.css'; // 스타일 시트 추가
+import './style.scss'; // 스타일 시트 추가
 import SubComponent from './sub-component';
 
 class App extends React.Component {

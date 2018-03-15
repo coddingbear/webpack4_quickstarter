@@ -1,0 +1,23 @@
+@import "base";
+@import "grid";
+
+#app {
+	padding: 10px;
+	background-color: rgba(0,0,0,0.8);
+	border-radius: 10px;
+	color : #fff;
+	text-align: center;
+	h1 {
+		font-size: 2em;
+	}
+	h2 {
+		font-size: 1.2em;
+	}
+	button {
+		padding: 10px 20px;
+		outline: none;
+		border: 2px solid #efefef;
+		font-size: 16px;
+		font-weight: bold;
+	}
+}

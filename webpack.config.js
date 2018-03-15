@@ -36,7 +36,7 @@ const config = {
 			},
 			{  // css 파일 번들 규칙
 				test:/\.css$/,
-				use:[ 
+				use: [ 
 					'style-loader', // link 태그에 출력 하는 기능
 					{
 						loader:'css-loader', // CSS를 번들하기 위한 기능
@@ -49,8 +49,44 @@ const config = {
 					// 번들 흐름은 배열의 뒤에서부터 차례로 해석됨
 					// css-loader -> style-loader 
 				],
+			},			
+			{ //Sass파일 읽기와 컴파일
+				test: /\.scss$/,//대상 파일의 확장자
+				use: [
+					'style-loader', //link태그에 출력하는 기능
+					{ //CSS를 번들하기 위한 기능
+						loader:'css-loader',
+						options: {
+							url: true, // 옵션에서 css내 url() 메소드를 넣는다.
+							sourceMap:enabledSourceMap, //소스 맵의 이용 여부
+							// 0=>no loaders(default);
+							// 1=>postcss-loader
+							// 2=>postcss-loader, sass-loader
+							importLoaders:2
+						},
+					},
+					{
+						loader:'sass-loader', //Sass -> Css 변환 로더
+						options: {
+							sourceMap:enabledSourceMap, //소스 맵의 이용 여부
+						}
+					}
+				],
 			},
-		]
+			{ // 이미지 파일, 웹 폰트 번들
+				test: /.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
+				// 화상을 Base64으로 끌어들인다.
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							limit: 100 * 1023,  // 100KB 이하의 이미지 파일로 한정
+							name: './img/[name].[ext]'
+						}
+					}
+				],
+			},
+		],
 	},
 	// 로컬 개발용 환경을 만듦
 	// 실행시 브라우저가 자동적으로 localhost를 연다.
