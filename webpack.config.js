@@ -8,31 +8,33 @@ const MODE = 'development';
 const enabledSourceMap=(MODE==='development');
 
 const config = {
-	// 모드 값을 'production'으로 설정하면 최적화된 상태에서
-	// 'development'로 설정하면 소스맵을 효과적으로 JS파일이 출력된다.
+	// 모드 설정 : v4 이후 mode를 지정하지 않으면 wepack 실행 시 경고 표시
 	mode: MODE,
 	// 주를 이루는 JavaScript 파일(엔트리 포인트)
 	entry: [
-		'webpack-dev-server/client?http://reactboy.run.goorm.io',
+		'webpack-dev-server/client?http://reactboy.run.goorm.io',  // 핫 로더를 위한 엔트리 포인트 설정
 		'webpack/hot/only-dev-server',
-		'./src',	
+		'./src/index.js',	
 	],
 	// 파일 출력 설정
 	output: {
-		path: path.resolve(__dirname, 'dist'), // 출력 파일 디렉토리 이름
+		path: path.resolve(__dirname, 'dist'), // 출력 패스 설정
 		filename: '[name].bundle.js' // 출력 파일 이름
 	},
+	// 로더 모듈 설정
 	module: {
 		rules: [
-			{   // 확장자가 .js 경우 규칙
+			{   // JavaScript 번들 규칙
 				test: /\.js$/,
+				include: path.resolve(__dirname, 'src'),
+				exclude: /node_modules/, // 로더 처리 대상에서 제외 폴더
 				use: [
 					{	// Babel 로더 이용
 						loader: 'babel-loader',
 						options: { // Babel 옵션 지정
 							presets: [
 								// 'env'로 지정하여 ES2017를 ES5로 변환
-								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
+								//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨, 트리 쉐이킹 사용
 								['env', {'modules' : false}	],
 								// React의 JSX 해석
 								'react',
@@ -43,8 +45,14 @@ const config = {
 						}
 					}
 				],
-				include: path.resolve(__dirname, 'src'),
+			},
+			{
+				// enforce: 'pre'를 지정하면 지정하지 않은 로더보다 우선 처리가 실행 된다.
+				// babel-loader로 변환하기 전에 JS 코드를 검사한다. 검사 룰 .eslintrs 설정
+				enforce: 'pre',
+				test: /\.js$/,
 				exclude: /node_modules/,
+				loader: 'eslint-loader'
 			},
 			{  // css 파일 번들 규칙
 				test:/\.css$/,
@@ -86,8 +94,8 @@ const config = {
 				],
 			},
 			{ // 이미지 파일, 웹 폰트 번들
-				test: /.(gif|png|jpg|eot|wof|woff|woff2|ttf|svg)$/,
-				// 화상을 Base64으로 끌어들인다.
+				test: /\.(gif|png|jpg|jpeg|ico|svg|eot|wof|woff|woff2|ttf)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+				// 이미지를 Base64로 인코딩합니다.
 				use: [
 					{
 						loader: 'url-loader',
@@ -129,7 +137,9 @@ const config = {
 			filename: 'index.html',
 		}),
 		new webpack.NamedModulesPlugin(),
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		// 이 플러그인이 없으면 eslint-loader 실행 시  에러가 발생 할 수 있다.(2018.03.15)
+		new webpack.LoaderOptionsPlugin({ options: {} }),
 	],
 };
 

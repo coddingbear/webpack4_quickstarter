@@ -222,6 +222,7 @@ webpack.config.js 파일을 생성하여 webpack 사용시 환경 설정을 미�
 								presets: [
 									// 'env'로 지정하여 ES2017를 ES5로 변환
 									//  modules: false 로 하지않으면 import문이 Babel에 의해서 CommonJS로 변환됨
+									// false 트리 세이킹 됨 : import 되지 않은 export들을 정리해주는 기능
 									['env', {'modules' : false}	]
 								]
 							}
